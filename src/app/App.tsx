@@ -34,10 +34,14 @@ export default function App() {
 
       const data = await response.json();
       
+      // API возвращает { id, issues } вместо { hasErrors, stopWords }
+      const hasErrors = data.issues && data.issues.length > 0;
+      const stopWords = data.issues || [];
+      
       setResult({
-        hasErrors: data.hasErrors || false,
-        stopWords: data.stopWords || [],
-        message: data.hasErrors ? 'Найдены стоп-слова' : 'Стоп-слова не найдены',
+        hasErrors,
+        stopWords,
+        message: hasErrors ? 'Найдены стоп-слова' : 'Стоп-слова не найдены',
       });
       setIsChecked(true);
     } catch (error) {
