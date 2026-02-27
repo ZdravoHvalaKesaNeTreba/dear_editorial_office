@@ -37,14 +37,18 @@ export function ResultsPanel({ result, isEmpty }: ResultsPanelProps) {
             Найдены стоп-слова
           </h2>
           <div className="space-y-3 w-full max-h-96 overflow-y-auto">
-            {result.stopWords.map((word, index) => (
-              <div
-                key={index}
-                className="px-5 py-3 bg-red-50 rounded-2xl text-red-700 font-medium border border-red-100 hover:bg-red-100 transition-colors"
-              >
-                {word}
-              </div>
-            ))}
+            {result.stopWords && result.stopWords.length > 0 ? (
+              result.stopWords.map((word, index) => (
+                <div
+                  key={index}
+                  className="px-5 py-3 bg-red-50 rounded-2xl text-red-700 font-medium border border-red-100 hover:bg-red-100 transition-colors"
+                >
+                  {String(word || 'Неизвестное слово')}
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500 text-center">Нет данных для отображения</p>
+            )}
           </div>
         </>
       ) : (

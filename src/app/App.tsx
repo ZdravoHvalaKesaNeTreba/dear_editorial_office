@@ -49,8 +49,21 @@ export default function App() {
       const data = await response.json();
       
       // API возвращает { id, issues } вместо { hasErrors, stopWords }
-      const hasErrors = data.issues && data.issues.length > 0;
-      const stopWords = data.issues || [];
+      // Обрабатываем случай, когда issues может быть массивом объектов или строк
+      let stopWords: string[] = [];
+      if (Array.isArray(data.issues)) {
+        stopWords = data.issues.map((issue: any) => {
+          if (typeof issue === 'string') {
+            return issue;
+          } else if (issue && typeof issue === 'object') {
+            // Если это объект, пытаемся извлечь нужное поле
+            return issue.word || issue.text || issue.issue || JSON.stringify(issue);
+          }
+          return String(issue);
+        });
+      }
+      
+      const hasErrors = stopWords.length > 0;
       
       setResult({
         hasErrors,
@@ -60,10 +73,15 @@ export default function App() {
       setIsChecked(true);
     } catch (error) {
       console.error('Error checking text:', error);
+      // Логируем детальную информацию об ошибке
+      if (error instanceof Error) {
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+      }
       setResult({
         hasErrors: false,
         stopWords: [],
-        message: 'Ошибка при проверке текста',
+        message: 'Ошибка при проверке текста. Попробуйте еще раз.',
       });
       setIsChecked(true);
     }
