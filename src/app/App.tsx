@@ -4,6 +4,8 @@ import { ServiceSelector, type Service } from './components/ServiceSelector';
 import { TextEditor } from './components/TextEditor';
 import { ResultsPanel, CheckResult } from './components/ResultsPanel';
 import { Footer } from './components/Footer';
+import { YandexAuth } from './auth/YandexAuth';
+import { authService } from './auth/authService';
 
 const API_URL = "https://d5d8madjmjgdsb9bp0jh.cmxivbes.apigw.yandexcloud.net/api/check";
 
@@ -17,11 +19,20 @@ export default function App() {
     if (!selectedService || !text.trim()) return;
 
     try {
+      // Получаем токен доступа, если пользователь авторизован
+      const token = authService.getAccessToken();
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
+      
+      // Добавляем Authorization заголовок, если есть токен
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(API_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify({
           service: selectedService.id,
           text: text.trim(),
@@ -69,6 +80,11 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-7xl mx-auto">
+        {/* Кнопка авторизации в правом верхнем углу */}
+        <div className="flex justify-end mb-4">
+          <YandexAuth />
+        </div>
+        
         <Header />
 
         <ServiceSelector
