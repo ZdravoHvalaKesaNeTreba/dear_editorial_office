@@ -58,13 +58,13 @@ export default function App() {
       <div className="max-w-7xl mx-auto">
         <Header />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div>
-            <ServiceSelector
-              selectedService={selectedService}
-              onServiceChange={setSelectedService}
-            />
-            
+        <ServiceSelector
+          selectedService={selectedService}
+          onServiceChange={setSelectedService}
+        />
+
+        <div className="bg-white rounded-2xl border border-gray-300 p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <TextEditor
               text={text}
               onTextChange={handleTextChange}
@@ -72,10 +72,10 @@ export default function App() {
               isChecked={isChecked}
               hasErrors={result?.hasErrors || false}
             />
-          </div>
 
-          <div className="bg-white rounded-2xl border border-gray-300 min-h-[400px] mt-[56px]">
-            <ResultsPanel result={result} isEmpty={!text.trim()} />
+            <div className="bg-white rounded-2xl border border-gray-300 min-h-[400px]">
+              <ResultsPanel result={result} isEmpty={!text.trim()} />
+            </div>
           </div>
         </div>
 
