@@ -34,26 +34,26 @@ export function ServiceSelector({
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="relative w-fit mb-4">
+    <div className="relative w-fit mb-8">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-xl border border-gray-300 hover:bg-gray-50 min-w-[250px] justify-between"
+        className="flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all min-w-[280px] justify-between text-white"
       >
-        <span className="flex items-center gap-2">
+        <span className="flex items-center gap-3">
           {selectedService ? (
             <>
-              <img src={selectedService.icon} alt="" className="w-5 h-5 rounded-full" />
-              <span>{selectedService.name}</span>
+              <img src={selectedService.icon} alt="" className="w-6 h-6 rounded-full" />
+              <span className="font-medium">{selectedService.name}</span>
             </>
           ) : (
-            'Выбрать сервис'
+            <span className="font-medium">Выбрать сервис</span>
           )}
         </span>
-        <ChevronDown className="w-4 h-4 text-gray-500" />
+        <ChevronDown className="w-5 h-5 text-white/70" />
       </button>
 
       {isOpen && (
-        <div className="absolute top-full mt-2 left-0 w-[250px] bg-white rounded-xl border border-gray-300 shadow-lg z-10 py-2">
+        <div className="absolute top-full mt-2 left-0 w-[280px] bg-white rounded-2xl border border-gray-200 shadow-2xl z-10 py-2 overflow-hidden">
           {services.map((service) => (
             <button
               key={service.id}
@@ -61,10 +61,10 @@ export function ServiceSelector({
                 onServiceChange(service);
                 setIsOpen(false);
               }}
-              className="w-full flex items-center gap-2 px-4 py-2.5 hover:bg-gray-50 transition-colors"
+              className="w-full flex items-center gap-3 px-6 py-3 hover:bg-gray-50 transition-colors text-[#191E28]"
             >
-              <img src={service.icon} alt="" className="w-5 h-5 rounded-full" />
-              <span>{service.name}</span>
+              <img src={service.icon} alt="" className="w-6 h-6 rounded-full" />
+              <span className="font-medium">{service.name}</span>
             </button>
           ))}
         </div>

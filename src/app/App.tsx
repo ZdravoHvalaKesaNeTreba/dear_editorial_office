@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { Header } from './components/Header';
+import { FeatureCards } from './components/FeatureCards';
 import { ServiceSelector, type Service } from './components/ServiceSelector';
 import { TextEditor } from './components/TextEditor';
 import { ResultsPanel, CheckResult } from './components/ResultsPanel';
 import { Footer } from './components/Footer';
+import { ForWhom } from './components/ForWhom';
 import { YandexAuth } from './auth/YandexAuth';
 import { authService } from './auth/authService';
+import logoEdit from '../assets/logo_edit.png';
 
 const API_URL = "https://d5d8madjmjgdsb9bp0jh.cmxivbes.apigw.yandexcloud.net/api/check";
 
@@ -78,37 +81,77 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Кнопка авторизации в правом верхнем углу */}
-        <div className="flex justify-end mb-4">
-          <YandexAuth />
-        </div>
-        
-        <Header />
+    <div className="min-h-screen bg-[#191E28] p-0">
+      {/* Верхняя секция с основным функционалом */}
+      <div className="relative bg-gradient-to-br from-[#6C3ED9] via-[#4B2BA8] to-[#191E28] pb-16">
+        <div className="max-w-7xl mx-auto px-8 pt-8">
+          {/* Логотип и кнопка авторизации на одной линии */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <h2 className="text-white font-['YS_Display'] font-bold text-3xl tracking-tight">
+                Дорогая
+              </h2>
+              <div className="flex items-center justify-center w-[38px] h-[38px] bg-white rounded-full overflow-hidden">
+                <img src={logoEdit} alt="Edit" className="w-[85%] h-[85%] object-contain" />
+              </div>
+              <h2 className="text-white font-['YS_Display'] font-bold text-3xl tracking-tight">
+                Редакция
+              </h2>
+            </div>
+            <YandexAuth />
+          </div>
+          
+          <div className="mb-12">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="px-4 py-1.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white text-sm font-medium">
+                Бесплатно
+              </span>
+              <span className="px-4 py-1.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white text-sm font-medium">
+                Онлайн
+              </span>
+            </div>
+            
+            <h1 className="text-white mb-6 leading-tight max-w-3xl">
+              Сервис проверки текстов для Яндекс Рекламы
+            </h1>
+          </div>
 
-        <ServiceSelector
-          selectedService={selectedService}
-          onServiceChange={setSelectedService}
-        />
+          {/* Карточки с возможностями */}
+          <FeatureCards />
 
-        <div className="bg-white rounded-2xl border border-gray-300 p-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <TextEditor
-              text={text}
-              onTextChange={handleTextChange}
-              onCheck={handleCheck}
-              isChecked={isChecked}
-              hasErrors={result?.hasErrors || false}
-            />
+          <ServiceSelector
+            selectedService={selectedService}
+            onServiceChange={setSelectedService}
+          />
 
-            <div className="bg-white rounded-2xl border border-gray-300 min-h-[400px]">
-              <ResultsPanel result={result} isEmpty={!text.trim()} />
+          <div className="bg-white rounded-[32px] border border-gray-200 p-8 shadow-2xl">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <TextEditor
+                text={text}
+                onTextChange={handleTextChange}
+                onCheck={handleCheck}
+                isChecked={isChecked}
+                hasErrors={result?.hasErrors || false}
+              />
+
+              <div className="bg-white rounded-[32px] border border-gray-200 min-h-[400px]">
+                <ResultsPanel result={result} isEmpty={!text.trim()} />
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <Footer />
+      {/* Секция "Для кого" */}
+      <div className="bg-[#191E28]">
+        <ForWhom />
+      </div>
+
+      {/* Футер */}
+      <div className="bg-[#191E28] px-8">
+        <div className="max-w-7xl mx-auto">
+          <Footer />
+        </div>
       </div>
     </div>
   );

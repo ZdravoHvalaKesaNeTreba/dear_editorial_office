@@ -1,0 +1,111 @@
+/* Яндекс компоненты и утилиты */
+
+/* Яндекс кнопки */
+.btn-yandex {
+  font-family: var(--font-family-text);
+  font-weight: 500;
+  padding: 12px 24px;
+  border-radius: 16px;
+  transition: all 0.2s ease;
+}
+
+.btn-yandex-primary {
+  background-color: var(--yandex-yellow);
+  color: var(--yandex-black);
+}
+
+.btn-yandex-primary:hover {
+  background-color: #FFD633;
+}
+
+.btn-yandex-secondary {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-yandex-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Яндекс карточки */
+.card-yandex {
+  background: white;
+  border-radius: 32px;
+  padding: 32px;
+  transition: all 0.3s ease;
+}
+
+.card-yandex:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Яндекс типографика */
+.text-yandex-title1 {
+  font-family: var(--font-family-display);
+  font-size: 3.375rem; /* 54px */
+  font-weight: 800;
+  line-height: 3.75rem; /* 60px */
+}
+
+.text-yandex-title2 {
+  font-family: var(--font-family-display);
+  font-size: 2.125rem; /* 34px */
+  font-weight: 800;
+  line-height: 2.5rem; /* 40px */
+}
+
+.text-yandex-body {
+  font-family: var(--font-family-text);
+  font-size: 1.125rem; /* 18px */
+  font-weight: 400;
+  line-height: 1.75rem; /* 28px */
+}
+
+/* Яндекс цвета */
+.bg-yandex-yellow {
+  background-color: var(--yandex-yellow);
+}
+
+.bg-yandex-black {
+  background-color: var(--yandex-black);
+}
+
+.bg-yandex-dark {
+  background-color: var(--yandex-dark);
+}
+
+.text-yandex-yellow {
+  color: var(--yandex-yellow);
+}
+
+.text-yandex-purple-light {
+  color: var(--yandex-purple-light);
+}
+
+.text-yandex-gray {
+  color: var(--yandex-gray);
+}
+
+/* Яндекс анимации */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Яндекс gradients */
+.gradient-yandex-dark {
+  background: linear-gradient(180deg, #191E28 0%, #21272E 100%);
+}
