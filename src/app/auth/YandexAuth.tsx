@@ -6,6 +6,7 @@ export function YandexAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<YandexUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     checkAuthStatus();
@@ -31,19 +32,21 @@ export function YandexAuth() {
 
   const handleLogin = () => {
     authService.login();
+    setIsMenuOpen(false);
   };
 
   const handleLogout = () => {
     authService.logout();
     setUser(null);
     setIsAuthenticated(false);
+    setIsMenuOpen(false);
   };
 
   if (isLoading) {
     return (
-      <div className="flex items-center gap-2 text-gray-500">
-        <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
-        <span className="text-sm">Загрузка...</span>
+      <div className="flex items-center gap-2 text-white">
+        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+        <span className="text-sm hidden md:inline">Загрузка...</span>
       </div>
     );
   }
@@ -53,20 +56,72 @@ export function YandexAuth() {
   }
 
   return (
-    <button
-      onClick={handleLogin}
-      className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200 font-medium"
-      aria-label="Войти через Яндекс ID"
-    >
-      <svg 
-        className="w-5 h-5" 
-        viewBox="0 0 24 24" 
-        fill="currentColor"
-        aria-hidden="true"
+    <>
+      {/* Desktop button */}
+      <button
+        onClick={handleLogin}
+        className="hidden md:flex items-center justify-center gap-2 px-6 py-2.5 bg-white hover:bg-[#6C3ED9] text-black hover:text-white rounded-full transition-colors duration-200 font-medium whitespace-nowrap"
+        aria-label="Войти"
       >
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-      </svg>
-      <span>Войти через Яндекс</span>
-    </button>
+        <span>Войти</span>
+      </button>
+
+      {/* Mobile hamburger button */}
+      <button
+        onClick={() => setIsMenuOpen(true)}
+        className="flex md:hidden items-center justify-center w-10 h-10 text-white"
+        aria-label="Открыть меню"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+
+      {/* Mobile side menu */}
+      {isMenuOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            onClick={() => setIsMenuOpen(false)}
+          />
+          
+          {/* Side menu */}
+          <div className="fixed top-0 right-0 bottom-0 w-80 bg-white z-50 md:hidden flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b">
+              <div className="text-xl font-bold text-[#191E28]">Меню</div>
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="w-10 h-10 flex items-center justify-center text-[#191E28] hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Закрыть меню"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Menu content */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {/* Add menu items here if needed */}
+            </div>
+
+            {/* Login button at bottom */}
+            <div className="p-6 border-t">
+              <button
+                onClick={handleLogin}
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-[#6C3ED9] text-black hover:text-white border-2 border-black hover:border-[#6C3ED9] rounded-full transition-colors duration-200 font-medium"
+              >
+                <span>Войти</span>
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+    </>
   );
 }

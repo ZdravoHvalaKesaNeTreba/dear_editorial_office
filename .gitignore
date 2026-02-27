@@ -3,3 +3,7 @@ node_modules
 .env.local
 .env.*.local
 dist
+
+# Cloud Function build artifacts
+yandex-oauth-exchange/function.zip
+yandex-oauth-exchange/node_modules

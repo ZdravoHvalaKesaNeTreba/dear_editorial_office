@@ -84,32 +84,73 @@ class AuthService {
 
   /**
    * Обменивает authorization code на access token
-   * ВАЖНО: Это должно делаться на бэкенде!
-   * Здесь упрощенная версия для демонстрации
    */
   async exchangeCodeForToken(code: string): Promise<AuthTokens> {
-    // В реальном приложении этот запрос должен идти на ВАШ бэкенд,
-    // который затем обращается к Яндекс OAuth API с client_secret
+    // Получаем URL backend endpoint из переменных окружения
+    const backendUrl = import.meta.env.VITE_OAUTH_BACKEND_URL;
     
-    // Пример запроса к вашему бэкенду:
-    const response = await fetch('/api/auth/exchange', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        code,
-        redirect_uri: this.redirectUri,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Не удалось обменять код на токен');
+    // Если backend не настроен, используем mock для разработки
+    if (!backendUrl || backendUrl === '') {
+      console.warn('⚠️ VITE_OAUTH_BACKEND_URL не установлен. Используется mock для разработки.');
+      return this.mockExchangeToken(code);
     }
+    
+    try {
+      // Реальный запрос к backend
+      const response = await fetch(backendUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code,
+          redirect_uri: this.redirectUri,
+        }),
+      });
 
-    const tokens: AuthTokens = await response.json();
-    this.saveTokens(tokens);
-    return tokens;
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Не удалось обменять код на токен');
+      }
+
+      const tokens: AuthTokens = await response.json();
+      this.saveTokens(tokens);
+      return tokens;
+    } catch (error) {
+      console.error('Ошибка при обмене токена:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Mock функция для разработки (когда backend не настроен)
+   * @private
+   */
+  private async mockExchangeToken(code: string): Promise<AuthTokens> {
+    console.log('🔧 Используется mock режим для OAuth (только для разработки)');
+    
+    // Имитируем задержку сети
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    const mockTokens: AuthTokens = {
+      access_token: `mock_token_${code.substring(0, 10)}`,
+      expires_in: 31536000, // 1 год для тестирования
+      token_type: 'bearer',
+    };
+    
+    this.saveTokens(mockTokens);
+    
+    // Создаем mock пользователя
+    const mockUser: YandexUser = {
+      id: 'demo_user_' + Math.random().toString(36).substring(7),
+      login: 'demo_user',
+      display_name: 'Демо Пользователь',
+      real_name: 'Демо Пользователь',
+    };
+    
+    localStorage.setItem(USER_INFO_KEY, JSON.stringify(mockUser));
+    
+    return mockTokens;
   }
 
   /**

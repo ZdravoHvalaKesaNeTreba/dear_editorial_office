@@ -1,0 +1,14 @@
+{
+  "name": "yandex-oauth-exchange",
+  "version": "1.0.0",
+  "description": "Yandex Cloud Function для обмена OAuth кода на токен",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "npm run zip && npm run upload",
+    "zip": "zip -r function.zip index.js package.json",
+    "upload": "yc serverless function version create --function-name=oauth-exchange --runtime nodejs18 --entrypoint index.handler --memory 128m --execution-timeout 10s --source-path ./function.zip"
+  },
+  "keywords": ["oauth", "yandex", "cloud-function"],
+  "author": "",
+  "license": "MIT"
+}
