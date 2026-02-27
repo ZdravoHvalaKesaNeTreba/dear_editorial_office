@@ -74,10 +74,8 @@ export default function App() {
             />
           </div>
 
-          <div className="mt-[52px]">
-            <div className="bg-white rounded-2xl border border-gray-300 min-h-[400px]">
-              <ResultsPanel result={result} isEmpty={!text.trim()} />
-            </div>
+          <div className="bg-white rounded-2xl border border-gray-300 min-h-[400px] mt-[56px]">
+            <ResultsPanel result={result} isEmpty={!text.trim()} />
           </div>
         </div>
 
