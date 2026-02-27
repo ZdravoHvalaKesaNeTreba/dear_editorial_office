@@ -5,16 +5,7 @@ import { TextEditor } from './components/TextEditor';
 import { ResultsPanel, CheckResult } from './components/ResultsPanel';
 import { Footer } from './components/Footer';
 
-// Список стоп-слов для разных сервисов
-const stopWordsByService: Record<string, string[]> = {
-  direct: ['100% гарантия', 'лучшая цена', 'бесплатно', 'самый дешевый', 'только сегодня'],
-  rsya: ['гарантия результата', 'лучшее предложение', 'абсолютно бесплатно', 'номер один'],
-  business: ['номер 1', 'самый надежный', 'абсолютная гарантия', 'уникальное предложение'],
-  metrika: ['полная конфиденциальность', 'абсолютная точность', 'лучшая аналитика'],
-  products: ['гарантия возврата', 'всегда в наличии', 'самая низкая цена', 'бесплатная доставка'],
-  rhythm: ['лучшая музыка', 'эксклюзивный контент', 'только у нас', 'бесплатный доступ'],
-  view: ['гарантия качества', 'лучшие видео', 'эксклюзивно', 'только здесь'],
-};
+const API_URL = "https://d5d8madjmjgdsb9bp0jh.cmxivbes.apigw.yandexcloud.net/api/check";
 
 export default function App() {
   const [selectedService, setSelectedService] = useState<Service | null>(null);
@@ -22,24 +13,42 @@ export default function App() {
   const [result, setResult] = useState<CheckResult | null>(null);
   const [isChecked, setIsChecked] = useState(false);
 
-  const handleCheck = () => {
+  const handleCheck = async () => {
     if (!selectedService || !text.trim()) return;
 
-    const stopWords = stopWordsByService[selectedService.id] || [];
-    const lowerText = text.toLowerCase();
-    
-    const foundStopWords = stopWords.filter(word => 
-      lowerText.includes(word.toLowerCase())
-    );
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          service: selectedService.id,
+          text: text.trim(),
+        }),
+      });
 
-    const hasErrors = foundStopWords.length > 0;
+      if (!response.ok) {
+        throw new Error('Ошибка при проверке текста');
+      }
 
-    setResult({
-      hasErrors,
-      stopWords: foundStopWords,
-      message: hasErrors ? 'Найдены стоп-слова' : 'Стоп-слова не найдены',
-    });
-    setIsChecked(true);
+      const data = await response.json();
+      
+      setResult({
+        hasErrors: data.hasErrors || false,
+        stopWords: data.stopWords || [],
+        message: data.hasErrors ? 'Найдены стоп-слова' : 'Стоп-слова не найдены',
+      });
+      setIsChecked(true);
+    } catch (error) {
+      console.error('Error checking text:', error);
+      setResult({
+        hasErrors: false,
+        stopWords: [],
+        message: 'Ошибка при проверке текста',
+      });
+      setIsChecked(true);
+    }
   };
 
   const handleTextChange = (newText: string) => {
