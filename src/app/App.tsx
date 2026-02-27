@@ -47,20 +47,43 @@ export default function App() {
       }
 
       const data = await response.json();
+      console.log('API Response:', data); // Для отладки
       
       // API возвращает { id, issues } вместо { hasErrors, stopWords }
       // Обрабатываем случай, когда issues может быть массивом объектов или строк
       let stopWords: string[] = [];
       if (Array.isArray(data.issues)) {
         stopWords = data.issues.map((issue: any) => {
-          if (typeof issue === 'string') {
-            return issue;
-          } else if (issue && typeof issue === 'object') {
+          try {
+            // Если это строка, возвращаем как есть
+            if (typeof issue === 'string') {
+              return issue;
+            }
+            
+            // Если это null или undefined
+            if (issue == null) {
+              return 'Неизвестное слово';
+            }
+            
             // Если это объект, пытаемся извлечь нужное поле
-            return issue.word || issue.text || issue.issue || JSON.stringify(issue);
+            if (typeof issue === 'object') {
+              const possibleFields = ['word', 'text', 'issue', 'message', 'description'];
+              for (const field of possibleFields) {
+                if (issue[field] && typeof issue[field] === 'string') {
+                  return issue[field];
+                }
+              }
+              // Если нет подходящих полей, сериализуем объект
+              return JSON.stringify(issue);
+            }
+            
+            // Для всех остальных случаев принудительно конвертируем в строку
+            return String(issue);
+          } catch (err) {
+            console.error('Error processing issue:', issue, err);
+            return 'Ошибка обработки';
           }
-          return String(issue);
-        });
+        }).filter((word: any): word is string => typeof word === 'string' && word.length > 0);
       }
       
       const hasErrors = stopWords.length > 0;
