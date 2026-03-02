@@ -37,7 +37,7 @@ jobs:
         env:
           # Яндекс OAuth настройки
           VITE_YANDEX_CLIENT_ID: ${{ secrets.VITE_YANDEX_CLIENT_ID }}
-          VITE_YANDEX_REDIRECT_URI: https://zdravohvalakesanetreba.github.io/dear_editorial_office/auth/callback
+          VITE_YANDEX_REDIRECT_URI: https://deareditor.maksimprojects.space/auth/callback
           # API URLs
           VITE_API_URL: https://d5d8madjmjgdsb9bp0jh.cmxivbes.apigw.yandexcloud.net/api/check
           VITE_OAUTH_BACKEND_URL: ${{ secrets.VITE_OAUTH_BACKEND_URL }}
