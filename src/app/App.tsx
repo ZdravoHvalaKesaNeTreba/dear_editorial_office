@@ -153,7 +153,7 @@ export default function App() {
             </div>
             
             <h1 className="text-white mb-6 leading-tight max-w-3xl">
-              Сервис проверки текстов для Яндекс Рекламы
+              Сервис проверки текстов для Рекламы
             </h1>
           </div>
 
